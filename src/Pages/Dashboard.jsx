@@ -7,6 +7,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Home from '../Components/HomePage'; // Assuming Home is in the same directory
+import Courses from '../Components/Courses';
 
 const drawerWidth = 240;
 
@@ -18,7 +19,7 @@ const Dashboard = () => {
       case 'Home':
         return <Home />;
       case 'Courses':
-        return <Typography variant="h4">Course Management</Typography>;
+        return <Courses />;
       case 'Users':
         return <Typography variant="h4">User Management</Typography>;
       case 'Settings':
