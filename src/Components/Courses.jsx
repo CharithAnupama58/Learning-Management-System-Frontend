@@ -2,177 +2,88 @@ import React, { useState } from 'react';
 import {
   Box,
   Typography,
+  Button,
   Grid,
+  Drawer,
+  IconButton,
   Card,
   CardContent,
   CardMedia,
-  Button,
-  Chip,
-  Select,
-  MenuItem,
-  LinearProgress,
-  FormControl,
-  InputLabel,
 } from '@mui/material';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 
-const allCourses = [
-  {
-    id: 1,
-    title: 'React for Beginners',
-    instructor: 'Jane Smith',
-    image:
-      'https://img.freepik.com/free-vector/react-native-framework-mobile-development_23-2148785202.jpg',
-    category: 'Development',
-    progress: 60,
-  },
-  {
-    id: 2,
-    title: 'UI/UX Design Essentials',
-    instructor: 'Alex Johnson',
-    image:
-      'https://img.freepik.com/free-vector/user-interface-design-concept_23-2148799590.jpg',
-    category: 'Design',
-    progress: 0,
-  },
-  {
-    id: 3,
-    title: 'Advanced Python',
-    instructor: 'John Doe',
-    image:
-      'https://img.freepik.com/free-vector/python-programming-language-learning-concept_23-2149219957.jpg',
-    category: 'Development',
-    progress: 20,
-  },
-  {
-    id: 4,
-    title: 'Marketing Strategies',
-    instructor: 'Sara Lee',
-    image:
-      'https://img.freepik.com/free-vector/digital-marketing-concept-with-isometric-elements_1284-63796.jpg',
-    category: 'Marketing',
-    progress: 0,
-  },
-];
+const Course = () => {
+  const navigate = useNavigate();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
-const categories = ['All', 'Development', 'Design', 'Marketing'];
+  // Dummy data for courses
+  const courses = [
+    {
+      id: 1,
+      title: 'React for Beginners',
+      description: 'Master the basics of React including components, props, and state.',
+      image: '/images/react-course.jpg',
+      level: 'Beginner',
+      duration: '3h 45m',
+    },
+    {
+      id: 2,
+      title: 'Advanced JavaScript',
+      description: 'Deep dive into closures, async programming, and advanced ES6+ features.',
+      image: '/images/js-course.jpg',
+      level: 'Advanced',
+      duration: '4h 20m',
+    },
+  ];
 
-const Courses = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const handleOpenDrawer = (course) => {
+    setSelectedCourse(course);
+    setDrawerOpen(true);
+  };
 
-  const filteredCourses =
-    selectedCategory === 'All'
-      ? allCourses
-      : allCourses.filter((course) => course.category === selectedCategory);
+  const handleContinueLearning = () => {
+    setDrawerOpen(false);
+    navigate('/learning', { state: { course: selectedCourse } });
+  };
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 4,
-        }}
-      >
-        <Typography variant="h4" fontWeight="bold">
-          Your Courses
-        </Typography>
-        <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel>Category</InputLabel>
-          <Select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            label="Category"
-          >
-            {categories.map((cat) => (
-              <MenuItem key={cat} value={cat}>
-                {cat}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+    <Box p={4}>
+      <Typography variant="h4" fontWeight="bold" mb={3}>
+        Your Courses
+      </Typography>
 
       <Grid container spacing={3}>
-        {filteredCourses.map((course) => (
+        {courses.map((course) => (
           <Grid item xs={12} sm={6} md={4} key={course.id}>
-            <Card
-              sx={{
-                borderRadius: 4,
-                boxShadow: 3,
-                transition: '0.3s',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                '&:hover': { boxShadow: 6 },
-              }}
-            >
+            <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
               <CardMedia
                 component="img"
-                height="180"
+                height="160"
                 image={course.image}
                 alt={course.title}
               />
-              <CardContent sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
+              <CardContent>
+                <Typography variant="h6" fontWeight="bold">
                   {course.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Instructor: {course.instructor}
+                <Typography variant="body2" color="text.secondary" mt={1}>
+                  {course.description}
                 </Typography>
-                <Chip
-                  label={course.category}
-                  size="small"
-                  variant="outlined"
-                  color="primary"
-                  sx={{ mb: 2, alignSelf: 'flex-start' }}
-                />
-
-                {course.progress > 0 ? (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Progress: {course.progress}%
-                    </Typography>
-                    <LinearProgress
-                      variant="determinate"
-                      value={course.progress}
-                      sx={{ height: 8, borderRadius: 5, mt: 0.5 }}
-                    />
-                  </Box>
-                ) : (
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mb: 2 }}
-                  >
-                    Not started
+                <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+                  <Typography variant="caption" color="primary">
+                    {course.level}
                   </Typography>
-                )}
-
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 1,
-                    mt: 'auto', // Push to bottom
-                  }}
-                >
+                  <Typography variant="caption">{course.duration}</Typography>
+                </Box>
+                <Box mt={2}>
                   <Button
-                    size="small"
                     variant="contained"
-                    color="primary"
-                    startIcon={<PlayArrowIcon />}
+                    fullWidth
+                    onClick={() => handleOpenDrawer(course)}
                   >
-                    {course.progress > 0 ? 'Continue' : 'Start'}
-                  </Button>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    color="secondary"
-                    startIcon={<FavoriteBorderIcon />}
-                  >
-                    Wishlist
+                    Continue
                   </Button>
                 </Box>
               </CardContent>
@@ -180,8 +91,53 @@ const Courses = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Drawer Section */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        PaperProps={{
+          sx: { width: { xs: '100%', sm: 400 }, p: 3, borderTopLeftRadius: 12 },
+        }}
+      >
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h6" fontWeight="bold">
+            {selectedCourse?.title}
+          </Typography>
+          <IconButton onClick={() => setDrawerOpen(false)}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        <CardMedia
+          component="img"
+          height="180"
+          image={selectedCourse?.image}
+          alt={selectedCourse?.title}
+          sx={{ borderRadius: 2 }}
+        />
+        <Typography variant="body1" mt={2}>
+          {selectedCourse?.description}
+        </Typography>
+
+        <Typography variant="caption" color="text.secondary" mt={1} display="block">
+          Level: {selectedCourse?.level} • Duration: {selectedCourse?.duration}
+        </Typography>
+
+        <Box mt={4}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleContinueLearning}
+            sx={{ textTransform: 'none', fontWeight: 'bold' }}
+          >
+            Continue Learning
+          </Button>
+        </Box>
+      </Drawer>
     </Box>
   );
 };
 
-export default Courses;
+export default Course;
